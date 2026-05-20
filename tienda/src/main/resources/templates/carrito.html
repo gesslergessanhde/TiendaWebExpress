@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      th:replace="~{layout :: html(titulo='Tu Carrito - Tienda Web Express')}">
+<body>
+<div th:fragment="contenido">
+    <section class="section">
+        <h1>Tu Carrito de Compras</h1>
+
+        <div th:if="${items == null || items.isEmpty()}" style="text-align: center; padding: 3rem; background: #1a1a1a; border-radius: 8px; border: 1px dashed #444; margin-top: 2rem;">
+            <h3 style="color: #aaa; margin-bottom: 1rem;">Tu carrito está vacío</h3>
+            <p style="color: #777;">Explora nuestro catálogo para añadir productos tecnológicos.</p>
+            <a th:href="@{/catalogo}" class="btn btn-primary" style="margin-top: 1.5rem; display: inline-block; text-decoration: none;">Ir al catálogo</a>
+        </div>
+
+        <div th:unless="${items == null || items.isEmpty()}" style="margin-top: 2rem;">
+            <table style="width: 100%; border-collapse: collapse; background: #1a1a1a; border-radius: 8px; overflow: hidden; color: #fff; margin-bottom: 2rem;">
+                <thead>
+                <tr style="background: #2a2a2a; text-align: left;">
+                    <th style="padding: 1rem;">Producto</th>
+                    <th style="padding: 1rem;">Precio Unitario</th>
+                    <th style="padding: 1rem; text-align: center;">Cantidad</th>
+                    <th style="padding: 1rem;">Subtotal</th>
+                    <th style="padding: 1rem; text-align: center;">Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${items}" style="border-bottom: 1px solid #333;">
+                    <td style="padding: 1rem; display: flex; align-items: center; gap: 1rem;">
+                        <img th:src="@{'/img/' + ${item.imagen}}" th:alt="${item.nombre}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px Shil;"/>
+                        <div>
+                            <strong th:text="${item.nombre}" style="color: #fff; font-size: 1.1rem;">Nombre</strong><br/>
+                            <span style="font-size: 0.85rem; color: #888;" th:text="${item.categoria}">Categoría</span>
+                        </div>
+                    </td>
+                    <td style="padding: 1rem; color: #ccc;" th:text="'$ ' + ${item.precio}">$0.00</td>
+                    <td style="padding: 1rem; text-align: center; font-weight: bold;" th:text="${item.cantidad}">1</td>
+                    <td style="padding: 1rem; font-weight: bold; color: #5cb85c;" th:text="'$ ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">$0.00</td>
+                    <td style="padding: 1rem; text-align: center;">
+                        <form th:action="@{'/carrito/quitar/' + ${item.id}}" method="post" style="margin: 0; display: inline;">
+                            <button type="submit" class="btn" style="background: #d9534f; color: white; padding: 0.4rem 0.8rem; font-size: 0.85rem; border: none; border-radius: 4px; cursor: pointer;">
+                                Quitar
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #2a2a2a; padding: 1.5rem; border-radius: 8px; border: 1px solid #333;">
+                <div>
+                    <a th:href="@{/catalogo}" style="color: #aaa; text-decoration: none; font-size: 0.95rem;">&larr; Volver al catálogo</a>
+                </div>
+                <div style="text-align: right;">
+                    <h3 style="margin: 0 0 1rem 0; font-size: 1.3rem; color: #fff;">Total a pagar: <span style="color: #5cb85c; font-weight: bold;" th:text="'$ ' + ${#numbers.formatDecimal(totalPagar, 1, 2)}">$0.00</span></h3>
+                    <a th:href="@{/pedido}" class="btn btn-primary" style="padding: 0.75rem 2rem; font-weight: bold; text-decoration: none; display: inline-block; border-radius: 4px;">Procesar Pedido</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+</body>
+</html>

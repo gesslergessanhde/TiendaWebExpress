@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      th:replace="~{layout :: html(titulo='Pedido - Tienda Web Express')}">
+<body>
+<div th:fragment="contenido">
+    <section class="section">
+        <h1>Formulario de pedido</h1>
+        <form id="form-pedido" th:action="@{/pedido}" th:object="${pedidoForm}" method="post" class="form" novalidate>
+            <div class="campo">
+                <label>Nombre</label>
+                <input type="text" th:field="*{nombre}" required minlength="2"/>
+                <small class="error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></small>
+            </div>
+            <div class="campo">
+                <label>Correo</label>
+                <input type="email" th:field="*{correo}" required/>
+                <small class="error" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></small>
+            </div>
+            <div class="campo">
+                <label>Producto</label>
+                <select th:field="*{producto}" required>
+                    <option value="">-- Selecciona --</option>
+                    <option th:each="p : ${productos}" th:value="${p.nombre}" th:text="${p.nombre}"></option>
+                </select>
+                <small class="error" th:if="${#fields.hasErrors('producto')}" th:errors="*{producto}"></small>
+            </div>
+            <div class="campo">
+                <label>Cantidad</label>
+                <input type="number" th:field="*{cantidad}" min="1" max="99" required/>
+                <small class="error" th:if="${#fields.hasErrors('cantidad')}" th:errors="*{cantidad}"></small>
+            </div>
+            <div class="campo">
+                <label>Comentario o direccion</label>
+                <textarea th:field="*{comentario}" rows="4" maxlength="500"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar pedido</button>
+        </form>
+    </section>
+</div>
+</body>
+</html>

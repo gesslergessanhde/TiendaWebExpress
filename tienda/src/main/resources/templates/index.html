@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      th:replace="~{layout :: html(titulo='Inicio - Tienda Web Express')}">
+<body>
+<div th:fragment="contenido">
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Lo ultimo en productos de tecnologia.</h1>
+            <p>Descubre los productos de las mejores marcas en el mundo del gaming</p>
+            <a class="btn btn-primary" th:href="@{/catalogo}">Ver catalogo</a>
+        </div>
+        <img src="https://imgs.search.brave.com/VKymJgCWiQfG772AQEFNJQeEdku4tY8PsPaXPoc4rfc/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC93cDI0NTcy/MjAuanBn" class="hero-img" alt="Laptop">
+
+    </section>
+
+    <section class="section">
+        <h2>Productos destacados</h2>
+        <div class="grid">
+            <article class="card" th:each="p : ${destacados}">
+                <img th:src="@{'/img/' + ${p.imagen}}" th:alt="${p.nombre}"/>
+                <div class="card-body">
+                    <span class="tag" th:text="${p.categoria}">cat</span>
+                    <h3 th:text="${p.nombre}">nombre</h3>
+                    <p class="price" th:text="'$ ' + ${p.precio}">$0</p>
+                    <a class="btn" th:href="@{'/producto/' + ${p.id}}">Ver detalle</a>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>
+</body>
+</html>

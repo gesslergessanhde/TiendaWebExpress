@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      th:replace="~{layout :: html(titulo='Catálogo - Tienda Web Express')}">
+<body>
+<div th:fragment="contenido">
+    <section class="section">
+        <h1>Catálogo de productos</h1>
+
+        <form th:action="@{/catalogo}" method="get" class="filtros-form" style="margin-bottom: 2rem; background: #2a2a2a; padding: 1.5rem; border-radius: 8px;">
+            <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+
+                <div class="campo-busqueda" style="flex: 1; min-width: 200px;">
+                    <label for="buscar-nombre" style="display: block; margin-bottom: 0.5rem; color: #fff;">Buscar por nombre:</label>
+                    <input type="text" id="buscar-nombre" name="nombre" th:value="${nombreBuscar}"
+                           placeholder="Ej. Laptop, Mouse..." style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #444; background: #1a1a1a; color: #fff;"/>
+                </div>
+
+                <div class="campo-categoria" style="flex: 1; min-width: 200px;">
+                    <label for="filtro-categoria" style="display: block; margin-bottom: 0.5rem; color: #fff;">Filtrar por categoría:</label>
+                    <select id="filtro-categoria" name="categoria" style="width: 100%; padding: 0.5rem; border-radius: 4px; border: 1px solid #444; background: #1a1a1a; color: #fff;">
+                        <option value="">Todas las categorías</option>
+                        <option th:each="c : ${categorias}"
+                                th:value="${c}"
+                                th:text="${c}"
+                                th:selected="${c == categoriaSeleccionada}"></option>
+                    </select>
+                </div>
+
+                <div class="botones-filtro" style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1.5rem;">Buscar</button>
+                    <a th:href="@{/catalogo}" class="btn" style="padding: 0.5rem 1.5rem; background: #555; color: #fff; text-decoration: none; border-radius: 4px; text-align: center;">Limpiar filtros</a>
+                </div>
+
+            </div>
+        </form>
+
+        <div th:if="${#lists.isEmpty(productos)}" class="alert-vacido" style="text-align: center; padding: 3rem; background: #1a1a1a; border-radius: 8px; border: 1px dashed #444; margin-top: 2rem;">
+            <h3 style="color: #ff6b6b;">No se encontraron productos</h3>
+            <p style="color: #aaa;">Intenta modificando los criterios de búsqueda o limpiando los filtros actuales.</p>
+        </div>
+
+        <div th:unless="${#lists.isEmpty(productos)}" class="grid" id="grid-productos">
+            <article class="card" th:each="p : ${productos}">
+                <img th:src="@{'/img/' + ${p.imagen}}" th:alt="${p.nombre}"/>
+                <div class="card-body">
+                    <span class="tag" th:text="${p.categoria}">cat</span>
+                    <h3 th:text="${p.nombre}">nombre</h3>
+                    <p class="price" th:text="'$ ' + ${p.precio}">$0</p>
+                    <div class="actions">
+                        <a class="btn" th:href="@{'/producto/' + ${p.id}}">Ver detalle</a>
+
+                        <form th:action="@{'/carrito/agregar/' + ${p.id}}" method="post" style="margin: 0; display: inline;">
+                            <button type="submit" class="btn btn-primary btn-add" th:disabled="${!p.disponible}">
+                                <span th:text="${p.disponible} ? 'Agregar' : 'Agotado'">Agregar</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</div>
+</body>
+</html>

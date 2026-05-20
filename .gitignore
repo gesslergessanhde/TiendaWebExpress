@@ -1,0 +1,3 @@
+# Project exclude paths
+/tienda/target/
+/tienda/src/main/resources/application.properties

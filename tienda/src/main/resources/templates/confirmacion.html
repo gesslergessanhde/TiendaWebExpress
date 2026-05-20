@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es"
+      th:replace="~{layout :: html(titulo='Pedido recibido')}">
+<body>
+<div th:fragment="contenido">
+    <section class="section">
+        <div class="confirm">
+            <h1>&iexcl;Gracias, <span th:text="${pedido.nombre}">cliente</span>!</h1>
+            <p>Hemos recibido tu solicitud. Te contactaremos a <strong th:text="${pedido.correo}">correo</strong>.</p>
+            <ul>
+                <li><strong>Producto:</strong> <span th:text="${pedido.producto}"></span></li>
+                <li><strong>Cantidad:</strong> <span th:text="${pedido.cantidad}"></span></li>
+                <li th:if="${pedido.comentario != null and !pedido.comentario.isBlank()}">
+                    <strong>Comentario:</strong> <span th:text="${pedido.comentario}"></span>
+                </li>
+            </ul>
+            <a class="btn btn-primary" th:href="@{/catalogo}">Seguir comprando</a>
+        </div>
+    </section>
+</div>
+</body>
+</html>
