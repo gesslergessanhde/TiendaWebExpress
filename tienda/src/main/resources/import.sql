@@ -1,0 +1,5 @@
+INSERT INTO productos (nombre, categoria, precio, descripcion, imagen, disponible, destacado) VALUES ('Mouse inalámbrico', 'Tecnología', 12.99, 'Mouse ergonómico con conexión USB.', 'mouse.png', true, true);
+INSERT INTO productos (nombre, categoria, precio, descripcion, imagen, disponible, destacado) VALUES ('Teclado mecánico', 'Tecnología', 39.99, 'Teclado mecánico con iluminación LED.', 'teclado.png', true, true);
+INSERT INTO productos (nombre, categoria, precio, descripcion, imagen, disponible, destacado) VALUES ('Camiseta básica', 'Ropa', 9.50, 'Camiseta de algodón disponible en varias tallas.', 'camiseta.png', true, true);
+INSERT INTO productos (nombre, categoria, precio, descripcion, imagen, disponible, destacado) VALUES ('Taza personalizada', 'Hogar', 6.75, 'Taza de cerámica ideal para regalos.', 'taza.png', true, true);
+INSERT INTO productos (nombre, categoria, precio, descripcion, imagen, disponible, destacado) VALUES ('Mochila urbana', 'Accesorios', 24.99, 'Mochila resistente para uso diario.', 'mochila.png', true, true);
