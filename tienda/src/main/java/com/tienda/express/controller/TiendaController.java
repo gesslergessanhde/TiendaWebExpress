@@ -7,6 +7,7 @@ import com.tienda.express.repository.ProductoRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -86,7 +87,6 @@ public class TiendaController {
     public String verCarrito(HttpSession session, Model model) {
         List<CarritoItem> carrito = obtenerCarrito(session);
 
-        // Creamos una estructura temporal combinada que Thymeleaf pueda leer sin problemas de Hibernate
         List<Map<String, Object>> itemsParaVista = new ArrayList<>();
         double totalPagar = 0.0;
 
@@ -114,9 +114,12 @@ public class TiendaController {
         return "carrito";
     }
 
+    // MODIFICADO: Se elimina la redirección fija para interactuar con JavaScript asíncrono
     @PostMapping("/carrito/agregar/{id}")
-    public String agregarAlCarrito(@PathVariable Long id, HttpSession session) {
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> agregarAlCarrito(@PathVariable Long id, HttpSession session) {
         Producto p = productoRepository.findById(id).orElse(null);
+        Map<String, Object> respuesta = new HashMap<>();
 
         if (p != null && p.getDisponible()) {
             List<CarritoItem> carrito = obtenerCarrito(session);
@@ -135,8 +138,16 @@ public class TiendaController {
             }
 
             session.setAttribute("carrito", carrito);
+
+            // Retornamos el total actual de ítems para que puedas actualizar el badge si quieres
+            respuesta.put("status", "success");
+            respuesta.put("totalItems", calcularTotalItems(carrito));
+            return ResponseEntity.ok(respuesta);
         }
-        return "redirect:/carrito";
+
+        respuesta.put("status", "error");
+        respuesta.put("message", "Producto no disponible");
+        return ResponseEntity.badRequest().body(respuesta);
     }
 
     @PostMapping("/carrito/quitar/{id}")
