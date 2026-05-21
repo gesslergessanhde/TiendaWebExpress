@@ -26,7 +26,7 @@
                 <tbody>
                 <tr th:each="item : ${items}" style="border-bottom: 1px solid #333;">
                     <td style="padding: 1rem; display: flex; align-items: center; gap: 1rem;">
-                        <img th:src="@{'/img/' + ${item.imagen}}" th:alt="${item.nombre}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px Shil;"/>
+                        <img th:src="@{'/img/' + ${item.imagen}}" th:alt="${item.nombre}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"/>
                         <div>
                             <strong th:text="${item.nombre}" style="color: #fff; font-size: 1.1rem;">Nombre</strong><br/>
                             <span style="font-size: 0.85rem; color: #888;" th:text="${item.categoria}">Categoría</span>
@@ -37,26 +37,4 @@
                     <td style="padding: 1rem; font-weight: bold; color: #5cb85c;" th:text="'$ ' + ${#numbers.formatDecimal(item.subtotal, 1, 2)}">$0.00</td>
                     <td style="padding: 1rem; text-align: center;">
                         <form th:action="@{'/carrito/quitar/' + ${item.id}}" method="post" style="margin: 0; display: inline;">
-                            <button type="submit" class="btn" style="background: #d9534f; color: white; padding: 0.4rem 0.8rem; font-size: 0.85rem; border: none; border-radius: 4px; cursor: pointer;">
-                                Quitar
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-
-            <div style="display: flex; justify-content: space-between; align-items: center; background: #2a2a2a; padding: 1.5rem; border-radius: 8px; border: 1px solid #333;">
-                <div>
-                    <a th:href="@{/catalogo}" style="color: #aaa; text-decoration: none; font-size: 0.95rem;">&larr; Volver al catálogo</a>
-                </div>
-                <div style="text-align: right;">
-                    <h3 style="margin: 0 0 1rem 0; font-size: 1.3rem; color: #fff;">Total a pagar: <span style="color: #5cb85c; font-weight: bold;" th:text="'$ ' + ${#numbers.formatDecimal(totalPagar, 1, 2)}">$0.00</span></h3>
-                    <a th:href="@{/pedido}" class="btn btn-primary" style="padding: 0.75rem 2rem; font-weight: bold; text-decoration: none; display: inline-block; border-radius: 4px;">Procesar Pedido</a>
-                </div>
-            </div>
-        </div>
-    </section>
-</div>
-</body>
-</html>
+                            <button type="submit" class="btn" style="background: #d9534f;

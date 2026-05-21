@@ -39,6 +39,18 @@ public class TiendaController {
         return carrito.stream().mapToInt(CarritoItem::getCantidad).sum();
     }
 
+    // Helper necesario para calcular el nuevo total al quitar un item asíncronamente
+    private double calcularTotalPagar(List<CarritoItem> carrito) {
+        double total = 0.0;
+        for (CarritoItem item : carrito) {
+            Producto p = productoRepository.findById(item.getProductoId()).orElse(null);
+            if (p != null) {
+                total += p.getPrecio() * item.getCantidad();
+            }
+        }
+        return total;
+    }
+
     @ModelAttribute
     public void agregarContadorCarrito(HttpSession session, Model model) {
         List<CarritoItem> carrito = obtenerCarrito(session);
@@ -87,6 +99,7 @@ public class TiendaController {
     public String verCarrito(HttpSession session, Model model) {
         List<CarritoItem> carrito = obtenerCarrito(session);
 
+        // Creamos una estructura temporal combinada que Thymeleaf pueda leer sin problemas de Hibernate
         List<Map<String, Object>> itemsParaVista = new ArrayList<>();
         double totalPagar = 0.0;
 
@@ -114,7 +127,7 @@ public class TiendaController {
         return "carrito";
     }
 
-    // MODIFICADO: Se elimina la redirección fija para interactuar con JavaScript asíncrono
+    // MODIFICADO: Devuelve JSON con el total actualizado en lugar de redirigir
     @PostMapping("/carrito/agregar/{id}")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> agregarAlCarrito(@PathVariable Long id, HttpSession session) {
@@ -139,7 +152,6 @@ public class TiendaController {
 
             session.setAttribute("carrito", carrito);
 
-            // Retornamos el total actual de ítems para que puedas actualizar el badge si quieres
             respuesta.put("status", "success");
             respuesta.put("totalItems", calcularTotalItems(carrito));
             return ResponseEntity.ok(respuesta);
@@ -150,12 +162,20 @@ public class TiendaController {
         return ResponseEntity.badRequest().body(respuesta);
     }
 
+    // MODIFICADO: Devuelve JSON con el total de items y el nuevo total a pagar en vez de redirigir
     @PostMapping("/carrito/quitar/{id}")
-    public String quitarDelCarrito(@PathVariable Long id, HttpSession session) {
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> quitarDelCarrito(@PathVariable Long id, HttpSession session) {
         List<CarritoItem> carrito = obtenerCarrito(session);
         carrito.removeIf(item -> item.getProductoId().equals(id));
         session.setAttribute("carrito", carrito);
-        return "redirect:/carrito";
+
+        Map<String, Object> respuesta = new HashMap<>();
+        respuesta.put("status", "success");
+        respuesta.put("totalItems", calcularTotalItems(carrito));
+        respuesta.put("nuevoTotalPagar", calcularTotalPagar(carrito));
+
+        return ResponseEntity.ok(respuesta);
     }
 
     // --- MÓDULO DE PEDIDOS ---
