@@ -49,7 +49,7 @@
                     <div class="actions">
                         <a class="btn" th:href="@{'/producto/' + ${p.id}}">Ver detalle</a>
 
-                        <form th:action="@{'/carrito/agregar/' + ${p.id}}" method="post" style="margin: 0; display: inline;">
+                        <form th:action="@{'/carrito/agregar/' + ${p.id}}" method="post" class="form-agregar" style="margin: 0; display: inline;">
                             <button type="submit" class="btn btn-primary btn-add" th:disabled="${!p.disponible}">
                                 <span th:text="${p.disponible} ? 'Agregar' : 'Agotado'">Agregar</span>
                             </button>
@@ -59,6 +59,38 @@
             </article>
         </div>
     </section>
+
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            const gridProductos = document.getElementById("grid-productos");
+
+            if (gridProductos) {
+                gridProductos.addEventListener("submit", function(e) {
+                    // Interceptamos únicamente los formularios que tengan la clase 'form-agregar'
+                    if (e.target && e.target.classList.contains("form-agregar")) {
+                        e.preventDefault(); // Evita por completo la redirección y la pestaña con JSON
+
+                        const form = e.target;
+
+                        fetch(form.action, {
+                            method: "POST"
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === "success") {
+                                    // Cambiamos el contador utilizando el ID real de tu layout: 'cart-count'
+                                    const contadorNav = document.getElementById("cart-count");
+                                    if (contadorNav) {
+                                        contadorNav.textContent = data.totalItems;
+                                    }
+                                }
+                            })
+                            .catch(error => console.error("Error al añadir artículo:", error));
+                    }
+                });
+            }
+        });
+    </script>
 </div>
 </body>
 </html>

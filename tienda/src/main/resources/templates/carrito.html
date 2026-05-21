@@ -80,8 +80,8 @@
                                     // 1. Elimina visualmente la fila del artículo removido
                                     fila.remove();
 
-                                    // 2. Modifica dinámicamente el contador global del navbar
-                                    const contadorGlobal = document.getElementById("contador-carrito");
+                                    // 2. CORREGIDO: Modifica dinámicamente el contador global usando el ID real de tu layout
+                                    const contadorGlobal = document.getElementById("cart-count");
                                     if (contadorGlobal) {
                                         contadorGlobal.textContent = data.totalItems;
                                     }
@@ -106,5 +106,4 @@
     </script>
 </div>
 </body>
-
 </html>
