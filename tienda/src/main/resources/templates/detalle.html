@@ -24,7 +24,7 @@
                 <p> </p>
             </div>
             <div class="actions">
-                <form th:action="@{'/carrito/agregar/' + ${producto.id}}" method="post" style="margin: 0; display: inline;">
+                <form th:action="@{'/carrito/agregar/' + ${producto.id}}" method="post" class="form-agregar" style="margin: 0; display: inline;">
                     <button type="submit" class="btn btn-primary btn-add" th:disabled="${!producto.disponible}">
                         Agregar al carrito
                     </button>
@@ -35,6 +35,33 @@
             <p><a th:href="@{/catalogo}">&larr; Volver al catalogo</a></p>
         </div>
     </section>
+
+    <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+            const formularioAgregar = document.querySelector(".form-agregar");
+
+            if (formularioAgregar) {
+                formularioAgregar.addEventListener("submit", function(e) {
+                    e.preventDefault(); // Evita por completo el parpadeo y la pestaña con JSON
+
+                    fetch(this.action, {
+                        method: "POST"
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === "success") {
+                                // Sincroniza dinámicamente el total usando el ID de tu layout: 'cart-count'
+                                const contadorNav = document.getElementById("cart-count");
+                                if (contadorNav) {
+                                    contadorNav.textContent = data.totalItems;
+                                }
+                            }
+                        })
+                        .catch(error => console.error("Error al añadir al carrito desde detalle:", error));
+                });
+            }
+        });
+    </script>
 </div>
 </body>
 </html>
